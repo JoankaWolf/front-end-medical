@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,19 +39,13 @@ public class PatientService {
         patientClient.updatePatient(patient);
     }
 
-//    public void deletePatient(Long patientId) {
-//        patientClient.deletePatient(patientId);
-//    }
 
     public List<Visit> getAllVisitsForPatient(Long patientId) {
         return patientClient.getAllVisitsForPatient(patientId);
     }
 
     public void deletePatient(Patient patient) {
-        Optional<Patient> searchedPatient = getAllPatients().stream()
-                .filter(patientDto1 -> patientDto1.getId().equals(patient.getId()))
-                .findFirst();
-        patientClient.deletePatient(searchedPatient.get().getId());
+        patientClient.deletePatient(patient.getId());
     }
 
     public List findByLastName(String lastName) {

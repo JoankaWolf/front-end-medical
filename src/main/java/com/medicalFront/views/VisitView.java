@@ -16,7 +16,6 @@ import com.vaadin.flow.router.Route;
 
 @Route(value = "Visits")
 public class VisitView extends VerticalLayout {
-
     private DatePicker filter = new DatePicker();
     private Grid<Visit> grid = new Grid<>(Visit.class);
     private Button button = new Button("Main Menu", event -> UI.getCurrent().navigate(""));

@@ -24,8 +24,8 @@ import java.time.LocalTime;
 
 public class VisitForm extends FormLayout {
 
-    private VisitService service = VisitService.getInstance();
-    private Binder<Visit> binder = new Binder<>(Visit.class);
+    private final VisitService service = VisitService.getInstance();
+    private final Binder<Visit> binder = new Binder<>(Visit.class);
     private DatePicker appointmentDate = new DatePicker("Appointment Date");
     private TimePicker appointmentTime = new TimePicker("Appointment Time");
     private TextField price = new TextField("Price");
@@ -34,9 +34,7 @@ public class VisitForm extends FormLayout {
     private ComboBox <StatusVisit> statusVisit = new ComboBox<>("Status Visit");
     private ComboBox <Doctor> doctor = new ComboBox<>("Doctor");
     private ComboBox<Patient> patient = new ComboBox<>("Patient");
-//
-    Binder<Doctor> binderD = new Binder<>(Doctor.class);
-//    Binder<Patient> binderP = new Binder<>(Patient.class);
+
     private Div euroSuffix = new Div();
 
     private Button save = new Button("Save");
@@ -44,47 +42,18 @@ public class VisitForm extends FormLayout {
     private VisitView visitView;
     private DoctorService doctorService = DoctorService.getInstance();
     private PatientService patientService = PatientService.getInstance();
+    private HorizontalLayout buttons = new HorizontalLayout(save, delete);
 
     public VisitForm(VisitView visitView) {
 
-        HorizontalLayout buttons = new HorizontalLayout(save, delete);
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        appointmentTime.setMin(LocalTime.of(8, 00));
-        appointmentTime.setMax(LocalTime.of(18, 40));
-        appointmentTime.setStep(Duration.ofMinutes(20));
-        euroSuffix.setText("€");
-        price.setSuffixComponent(euroSuffix);
-        statusVisit.setItems(StatusVisit.values());
-        isPaid.setItems(true, false);
-//
-//        binderD.forField(doctor).bind(Doctor::getId,Doctor::setId);
-//
-//        binderP.forField(patient).bind(Patient::getId, Patient::setId);
-
-//        ComboBox<Long> doctor = new ComboBox<>("Doctor");
-//
-//        ComboBox.ItemFilter<Doctor> filter = (lastName, filterString) ->lastName.getLastName()
-//                .toLowerCase().startsWith(filterString.toLowerCase());
-//        doctor.setItems(filter, doctorService.getAllDoctors());
-//
-//        add(doctor);
-//        doctor.setItemLabelGenerator(Doctor::getLastName);
-        patient.setItems(patientService.getAllPatients());
-        doctor.setItems(doctorService.getAllDoctors());
-   //     binderD.forField(doctor).withConverter(v -> extractID(v), v -> findId(doctorService, v)).bind(Doctor::getId, Doctor::setId);
-
-
-
-        add(appointmentDate, appointmentTime, price, notes, isPaid, statusVisit, doctor, patient,
-                 buttons);
+        viewButtons();
+        add(appointmentDate, appointmentTime, price, notes, isPaid, statusVisit, doctor, patient, buttons);
 
         binder.bindInstanceFields(this);
         this.visitView = visitView;
 
-        save.addClickListener(event -> save());
-        delete.addClickListener(event -> delete());
     }
+
 
     private void save() {
         Visit visit = binder.getBean();
@@ -117,20 +86,21 @@ public class VisitForm extends FormLayout {
     }
 
 
-    private Long extractID(Doctor v) {
-        return (v == null) ? null : v.getId();
+    private void viewButtons() {
+        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        save.addClickListener(event -> save());
+        delete.addClickListener(event -> delete());
+        appointmentTime.setMin(LocalTime.of(8, 00));
+        appointmentTime.setMax(LocalTime.of(18, 40));
+        appointmentTime.setStep(Duration.ofMinutes(20));
+        euroSuffix.setText("€");
+        price.setSuffixComponent(euroSuffix);
+        statusVisit.setItems(StatusVisit.values());
+        isPaid.setItems(true, false);
+
+        patient.setItems(patientService.getAllPatients());
+        doctor.setItems(doctorService.getAllDoctors());
+
     }
-
-    private Doctor findId(DoctorService doctorService, Long id) {
-        // User selected blank, return blank
-        if (id == null)
-            return new Doctor();
-        // Change this to properly interface with your service
-        return doctorService.getDoctor(id);
-    }
-
-
-
-
 
 }
