@@ -43,7 +43,7 @@ public class DoctorClient {
 
     public Doctor getDoctor(Long doctorId) {
         try {
-            return restTemplate.getForObject(DOCTOR_URL + doctorId, Doctor.class);
+            return restTemplate.getForObject(DOCTOR_URL + "/" + doctorId, Doctor.class);
         }
         catch (RestClientException e) {
             log.error(e.getMessage());
@@ -74,7 +74,7 @@ public class DoctorClient {
 
     public void deleteDoctor(Long doctorId) {
         try {
-            restTemplate.delete(DOCTOR_URL + doctorId);
+            restTemplate.delete(DOCTOR_URL + "/" + doctorId);
         } catch (RestClientException e) {
             log.error(e.getMessage());
         }

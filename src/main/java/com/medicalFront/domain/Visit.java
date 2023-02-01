@@ -15,14 +15,14 @@ import java.time.LocalTime;
 @Builder
 public class Visit {
 
-    private long id;
+    private Long id;
     private LocalDate appointmentDate;
     private LocalTime appointmentTime;
     private double price;
     private String notes;
-    private boolean isPaid;
-    private String statusVisit;
-    private Doctor doctor;
-    private Patient patient;
+    private Boolean isPaid;
+    private StatusVisit statusVisit;
+    private Long doctor;
+    private Long patient;
 
 }

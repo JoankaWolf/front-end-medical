@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +16,14 @@ public class Patient {
     private String firstName;
     private String lastName;
     private String email;
-    private long peselNumber;
+    private Long peselNumber;
+    private List<Visit> visits;
 
+    @Override
+    public String toString() {
+        return "Patient: " +
+                firstName +
+                ", " + lastName +
+                ", peselNumber: " + peselNumber;
+    }
 }

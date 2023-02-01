@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
+
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +40,14 @@ public class VisitService {
         visitClient.updateVisit(visit);
     }
 
-    public void deleteVisit(Long visitId) {
-        visitClient.deleteVisit(visitId);
+    public void deleteVisit(Long visitId) { visitClient.deleteVisit(visitId);
+
+    }
+
+
+    public List findByDate(Locale date) {
+        return getAllVisits().stream()
+                .filter(visit -> visit.getAppointmentDate().equals(date))
+                .collect(Collectors.toList());
     }
 }

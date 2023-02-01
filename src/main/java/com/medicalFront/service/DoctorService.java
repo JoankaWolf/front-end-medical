@@ -2,12 +2,15 @@ package com.medicalFront.service;
 
 import com.medicalFront.client.DoctorClient;
 import com.medicalFront.domain.Doctor;
+import com.medicalFront.domain.Patient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,18 +47,18 @@ public class DoctorService {
     }
 
 
-    public void deleteDoctor(Long doctorId) {
-        doctorClient.deleteDoctor(doctorId);
+    public void deleteDoctor(Doctor doctor) {
+        Optional<Doctor> searchedDoctor = getAllDoctors().stream()
+                .filter(doctorDto -> doctorDto.getId().equals(doctor.getId()))
+                .findFirst();
+        doctorClient.deleteDoctor(searchedDoctor.get().getId());
     }
 
 
-    private Set exampleData() {
-        Set doctors = new HashSet<>();
-        doctors.add(new Doctor(1L, "Jan", "Doe", "interna"));
-        doctors.add(new Doctor(2L, "Jan", "Dober", "interna"));
-        doctors.add(new Doctor(3L, "Ola", "Dole", "interna"));
-
-        return doctors;
+    public List findByLastName(String lastName) {
+        return getAllDoctors().stream()
+                .filter(patient -> patient.getLastName().contains(lastName))
+                .collect(Collectors.toList());
     }
 
 }

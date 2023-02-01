@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,4 +55,12 @@ public class PatientService {
                 .findFirst();
         patientClient.deletePatient(searchedPatient.get().getId());
     }
+
+    public List findByLastName(String lastName) {
+        return getAllPatients().stream()
+                .filter(patient -> patient.getLastName().contains(lastName))
+                .collect(Collectors.toList());
+    }
+
+
 }

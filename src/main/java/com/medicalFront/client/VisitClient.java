@@ -4,6 +4,7 @@ import com.medicalFront.domain.Patient;
 import com.medicalFront.domain.Visit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -15,8 +16,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Slf4j
+@Configuration
 @RequiredArgsConstructor
-@Component
 public class VisitClient {
 
     private final RestTemplate restTemplate;
@@ -42,7 +43,7 @@ public class VisitClient {
 
     public Visit getVisit(Long visitId) {
         try {
-            return restTemplate.getForObject(VISIT_URL + visitId, Visit.class);
+            return restTemplate.getForObject(VISIT_URL + "/" + visitId, Visit.class);
         }
         catch (RestClientException e) {
             log.error(e.getMessage());
@@ -73,7 +74,7 @@ public class VisitClient {
 
     public void deleteVisit(Long visitId) {
         try {
-            restTemplate.delete(VISIT_URL + visitId);
+            restTemplate.delete(VISIT_URL + "/" + visitId);
         } catch (RestClientException e) {
             log.error(e.getMessage());
         }

@@ -2,39 +2,68 @@ package com.medicalFront.views;
 
 import com.medicalFront.domain.Visit;
 import com.medicalFront.service.VisitService;
+import com.medicalFront.views.forms.VisitForm;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.vaadin.flow.router.Route;
+
 
 @Route(value = "Visits")
 public class VisitView extends VerticalLayout {
 
-    final NavigationBar menu;
-    final Button button = new Button("Main Menu", event -> UI.getCurrent().navigate(""));
+    private DatePicker filter = new DatePicker();
+    private Grid<Visit> grid = new Grid<>(Visit.class);
+    private Button button = new Button("Main Menu", event -> UI.getCurrent().navigate(""));
+    private VisitService service = VisitService.getInstance();
+    private Button buttonNewObject = new Button("New Visit");
+    private HorizontalLayout buttonLayout = new HorizontalLayout(button, buttonNewObject, filter);
+    private Text titleText = new Text("Visits Service");
 
-    private VisitService service;
-    final Grid grid;
-    Button buttonNewObject = new Button("New Visit");
-   private Visit visit;
+    private VisitForm form = new VisitForm(this);
 
     public VisitView(VisitService service) {
+        NavigationBar menu = new NavigationBar();
+        filter.setPlaceholder("Filter by Date...");
+        filter.setClearButtonVisible(true);
+        filter.getValue();
+        filter.addValueChangeListener(e -> update());
+        grid.setColumns("appointmentDate", "appointmentTime", "price", "notes", "isPaid", "statusVisit", "doctor", "patient");
 
-        this.menu = new NavigationBar();
-        this.service = service;
-        this.grid = new Grid<>(Visit.class);
-        grid.setColumns("notes", "price", "doctor", "patient");
+        grid.setItems(service.getAllVisits());
 
-        buttonNewObject.addClickListener(e -> service.addVisit(visit));
+        add(titleText, buttonLayout, menu, grid);
 
-        allVisitsList();
+        buttonNewObject.addClickListener(e -> {
+            grid.asSingleSelect().clear();
+            form.setVisit(new Visit());
+        });
 
-        add(button,menu, buttonNewObject, grid);
+
+        HorizontalLayout mainContent = new HorizontalLayout(grid, form);
+        mainContent.setSizeFull();
+        grid.setSizeFull();
+
+        add(mainContent);
+        form.setVisit(null);
+        setSizeFull();
+        refresh();
+
+
+        grid.asSingleSelect().addValueChangeListener(event -> form.setVisit(grid.asSingleSelect().getValue()));
     }
 
-    private void allVisitsList() {
-        grid.setItems(service.getAllVisits().toArray(new Visit[0]));
+    public void refresh() {
+        grid.setItems(service.getAllVisits());
+    }
+
+    private void update() {
+        grid.setItems(service.findByDate(filter.getLocale()));
     }
 
 }
