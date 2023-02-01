@@ -33,7 +33,7 @@ public class VisitView extends VerticalLayout {
         filter.setClearButtonVisible(true);
         filter.getValue();
         filter.addValueChangeListener(e -> update());
-        grid.setColumns("appointmentDate", "appointmentTime", "price", "notes", "isPaid", "statusVisit", "doctor", "patient");
+        grid.setColumns("appointmentDate", "appointmentTime", "price", "notes", "isPaid", "statusVisit", "doctor", "patient" );
 
         grid.setItems(service.getAllVisits());
 

@@ -22,7 +22,7 @@ public class Visit {
     private String notes;
     private Boolean isPaid;
     private StatusVisit statusVisit;
-    private Long doctor;
-    private Long patient;
+    private Doctor doctor;
+    private Patient patient;
 
 }
